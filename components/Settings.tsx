@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, BellOff, Info, Smartphone, ShieldCheck, Moon, Sun, RefreshCw, Download, CheckCircle, Key, Eye, EyeOff } from 'lucide-react';
-import { UserSettings } from '../types';
+import { Info, Smartphone, ShieldCheck, Moon, Sun, RefreshCw, Download, CheckCircle, Key, Eye, EyeOff, CalendarPlus, Calendar } from 'lucide-react';
+import { UserSettings, Medication } from '../types';
 
 interface SettingsProps {
   settings: UserSettings;
   onUpdateSettings: (settings: UserSettings) => void;
+  meds: Medication[];
+  onExportAllToCalendar: () => void;
 }
 
-const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
+const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings, meds, onExportAllToCalendar }) => {
   // Safe check for Notification API
   const getNotificationPermission = (): NotificationPermission => {
     if (typeof window !== 'undefined' && 'Notification' in window) {
@@ -299,52 +301,41 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
         )}
       </div>
 
-      {/* Notifications Toggle */}
+      {/* Calendar Integration */}
       <div className="space-y-6">
         <div>
-          <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-3 px-1">Powiadomienia</label>
-          <div className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-3xl p-2 shadow-sm">
-            <button
-              onClick={requestPermission}
-              className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all ${settings.notificationsEnabled && permissionStatus === 'granted'
-                ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
-                : 'bg-slate-50 dark:bg-slate-600 text-slate-500 dark:text-slate-300'
-                }`}
-            >
-              <div className="flex items-center gap-3">
-                {settings.notificationsEnabled && permissionStatus === 'granted' ? <Bell size={20} /> : <BellOff size={20} />}
-                <span className="font-bold">
-                  {permissionStatus === 'granted' ? 'Aktywne' : permissionStatus === 'denied' ? 'Zablokowane' : 'Kliknij, aby włączyć'}
-                </span>
+          <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-3 px-1">
+            Przypomnienia (Kalendarz iOS)
+          </label>
+          <div className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-3xl p-4 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <Calendar size={20} className="text-purple-500" />
+              <div>
+                <p className="font-bold text-slate-800 dark:text-white">Integracja z Kalendarzem</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Eksportuj leki do Kalendarza Apple</p>
               </div>
-              <div className={`w-10 h-6 rounded-full relative transition-colors ${settings.notificationsEnabled && permissionStatus === 'granted' ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-500'
-                }`}>
-                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${settings.notificationsEnabled && permissionStatus === 'granted' ? 'left-5' : 'left-1'
-                  }`} />
-              </div>
-            </button>
-          </div>
-        </div>
+            </div>
 
-        {settings.notificationsEnabled && (
-          <div className="animate-in fade-in slide-in-from-top-2">
-            <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-3 px-1">Przypomnienie przed czasem</label>
-            <div className="grid grid-cols-3 gap-3">
-              {[0, 5, 10, 15, 30].map((mins) => (
-                <button
-                  key={mins}
-                  onClick={() => onUpdateSettings({ ...settings, reminderMinutesBefore: mins })}
-                  className={`py-3 rounded-2xl text-sm font-bold transition-all border ${settings.reminderMinutesBefore === mins
-                    ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-100 dark:shadow-blue-900/50'
-                    : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-100 dark:border-slate-600'
-                    }`}
-                >
-                  {mins === 0 ? 'O czasie' : `${mins} min`}
-                </button>
-              ))}
+            <button
+              onClick={onExportAllToCalendar}
+              disabled={meds.length === 0}
+              className="w-full py-3 flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-xl font-bold text-sm transition-colors active:scale-[0.98]"
+            >
+              <CalendarPlus size={18} />
+              Eksportuj wszystkie leki ({meds.length})
+            </button>
+
+            <div className="mt-4 p-3 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
+              <p className="text-xs text-purple-700 dark:text-purple-300 leading-relaxed">
+                <strong>Jak to działa:</strong><br />
+                1. Kliknij przycisk powyżej<br />
+                2. Otwórz pobrany plik .ics<br />
+                3. Dodaj wydarzenia do Kalendarza<br />
+                4. Otrzymasz natywne powiadomienia iOS! 🔔
+              </p>
             </div>
           </div>
-        )}
+        </div>
 
         <div className="pt-6 border-t border-slate-100 dark:border-slate-600">
           <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-700 rounded-2xl">

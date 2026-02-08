@@ -1,7 +1,7 @@
-
 import React from 'react';
-import { Package, Plus, Minus, AlertCircle } from 'lucide-react';
+import { Package, Plus, Minus, AlertCircle, CalendarPlus } from 'lucide-react';
 import { Medication } from '../types';
+import { exportMedicationToCalendar } from '../services/calendarService';
 
 interface InventoryProps {
   meds: Medication[];
@@ -9,6 +9,11 @@ interface InventoryProps {
 }
 
 const Inventory: React.FC<InventoryProps> = ({ meds, onUpdateStock }) => {
+  const handleExportToCalendar = (med: Medication) => {
+    exportMedicationToCalendar(med);
+    alert(`✅ Przypomnienia dla "${med.name}" zostały wygenerowane!\n\nPo pobraniu otwórz plik i dodaj wydarzenia do Kalendarza.`);
+  };
+
   return (
     <div className="p-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex justify-between items-center mb-6">
@@ -57,6 +62,15 @@ const Inventory: React.FC<InventoryProps> = ({ meds, onUpdateStock }) => {
                   />
                 </div>
               </div>
+
+              {/* Calendar export button */}
+              <button
+                onClick={() => handleExportToCalendar(med)}
+                className="w-full mb-3 py-2.5 flex items-center justify-center gap-2 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 rounded-xl hover:bg-purple-100 dark:hover:bg-purple-900/50 active:scale-[0.98] transition-all text-sm font-bold"
+              >
+                <CalendarPlus size={16} />
+                Dodaj do Kalendarza iOS
+              </button>
 
               <div className="flex items-center justify-between gap-4 pt-2 border-t border-slate-50 dark:border-slate-600">
                 <button

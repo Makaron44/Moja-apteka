@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
@@ -8,6 +7,7 @@ import History from './components/History';
 import Settings from './components/Settings';
 import { ViewState, Medication, MedicationLog, UserSettings } from './types';
 import { INITIAL_MEDS } from './constants';
+import { exportAllMedicationsToCalendar } from './services/calendarService';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('dashboard');
@@ -121,7 +121,7 @@ const App: React.FC = () => {
         const medToEdit = meds.find(m => m.id === editingMedicationId);
         return medToEdit ? <MedicationForm initialData={medToEdit} onSave={(updated) => handleUpdateMed(updated as Medication)} onCancel={() => setView('meds')} /> : null;
       case 'history': return <History meds={meds} logs={logs} />;
-      case 'settings': return <Settings settings={settings} onUpdateSettings={setSettings} />;
+      case 'settings': return <Settings settings={settings} onUpdateSettings={setSettings} meds={meds} onExportAllToCalendar={() => exportAllMedicationsToCalendar(meds)} />;
       default: return <Dashboard meds={meds} logs={logs} onTakeMed={handleTakeMed} />;
     }
   };
