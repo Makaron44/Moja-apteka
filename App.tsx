@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Trash2 } from 'lucide-react';
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
 import Inventory from './components/Inventory';
@@ -95,6 +96,18 @@ const App: React.FC = () => {
     setView('meds');
   };
 
+  const handleDeleteMed = (id: string, name: string) => {
+    if (window.confirm(`Czy na pewno chcesz usunąć lek "${name}"?\n\nUsunięta zostanie również cała historia przyjmowania tego leku.`)) {
+      setMeds(prev => prev.filter(m => m.id !== id));
+      setLogs(prev => prev.filter(l => l.medicationId !== id));
+      // If we were editing this med, stop editing
+      if (editingMedicationId === id) {
+        setEditingMedicationId(null);
+        setView('meds');
+      }
+    }
+  };
+
   const renderView = () => {
     switch (view) {
       case 'dashboard': return <Dashboard meds={meds} logs={logs} onTakeMed={handleTakeMed} />;
@@ -105,7 +118,7 @@ const App: React.FC = () => {
           <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6 font-black uppercase tracking-tight">Twoja Apteczka</h2>
           {meds.length === 0 && <p className="text-slate-400 dark:text-slate-500 text-center py-10">Brak dodanych leków.</p>}
           {meds.map(m => (
-            <div key={m.id} onClick={() => { setEditingMedicationId(m.id); setView('edit'); }} className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 p-5 rounded-[2rem] flex items-center gap-4 shadow-sm cursor-pointer group hover:border-blue-200 dark:hover:border-blue-700 transition-all">
+            <div key={m.id} onClick={() => { setEditingMedicationId(m.id); setView('edit'); }} className="relative bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 p-5 rounded-[2rem] flex items-center gap-4 shadow-sm cursor-pointer group hover:border-blue-200 dark:hover:border-blue-700 transition-all">
               <div className={`w-14 h-14 ${m.color} rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-current/10`}>
                 <div className="font-bold text-[10px] text-center leading-tight uppercase">{m.dosage}</div>
               </div>
@@ -113,6 +126,12 @@ const App: React.FC = () => {
                 <h3 className="font-bold text-slate-800 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{m.name}</h3>
                 <p className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">{m.timesPerDay.join(' • ')}</p>
               </div>
+              <button
+                onClick={(e) => { e.stopPropagation(); handleDeleteMed(m.id, m.name); }}
+                className="p-3 text-slate-300 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl transition-all"
+              >
+                <Trash2 size={20} />
+              </button>
             </div>
           ))}
         </div>

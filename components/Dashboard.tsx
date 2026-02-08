@@ -83,7 +83,7 @@ const Dashboard: React.FC<DashboardProps> = ({ meds, logs, onTakeMed }) => {
         </div>
 
         {groups.map(groupName => {
-          const groupLogs = sortedLogs.filter(l => getTimeOfDay(l.plannedTime) === groupName);
+          const groupLogs = sortedLogs.filter(l => getTimeOfDay(l.plannedTime) === groupName && l.status !== 'taken');
           if (groupLogs.length === 0) return null;
 
           return (
@@ -102,10 +102,10 @@ const Dashboard: React.FC<DashboardProps> = ({ meds, logs, onTakeMed }) => {
                     <div
                       key={log.id}
                       className={`flex items-center gap-4 p-5 rounded-[2rem] border transition-all ${log.status === 'taken'
-                          ? 'bg-emerald-50/30 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800 opacity-60'
-                          : late
-                            ? 'bg-rose-50 dark:bg-rose-900/30 border-rose-200 dark:border-rose-800 shadow-md'
-                            : 'bg-white dark:bg-slate-700 border-slate-100 dark:border-slate-600 shadow-sm'
+                        ? 'bg-emerald-50/30 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800 opacity-60'
+                        : late
+                          ? 'bg-rose-50 dark:bg-rose-900/30 border-rose-200 dark:border-rose-800 shadow-md'
+                          : 'bg-white dark:bg-slate-700 border-slate-100 dark:border-slate-600 shadow-sm'
                         }`}
                     >
                       <div className={`w-14 h-14 ${med.color} rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-current/20`}>
