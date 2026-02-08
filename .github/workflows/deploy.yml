@@ -25,6 +25,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Copy PWA files to dist
+        run: |
+          cp icon.svg dist/ || true
+          cp manifest.json dist/ || true
+          cp sw.js dist/ || true
+
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
