@@ -2,17 +2,24 @@
     "name": "Moje Leki - Asystent Zdrowia",
     "short_name": "Moje Leki",
     "description": "Inteligentny asystent do zarządzania lekami i przypomnieniami",
-    "start_url": "./",
-    "scope": "./",
+    "start_url": "/Moja-apteka/",
+    "scope": "/Moja-apteka/",
+    "id": "/Moja-apteka/",
     "display": "standalone",
     "background_color": "#0f172a",
     "theme_color": "#3B82F6",
     "orientation": "portrait",
     "icons": [
         {
-            "src": "./icon.svg",
+            "src": "icon.svg",
             "sizes": "any",
             "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
             "purpose": "any maskable"
         }
     ],
