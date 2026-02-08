@@ -13,7 +13,7 @@ Aplikacja progresywna (PWA) do zarządzania lekami, która wykorzystuje **Gemini
 
 1. Sklonuj repozytorium:
    ```bash
-   git clone https://github.com/twoj-uzytkownik/moje-leki.git
+   git clone https://github.com/twoj-uzytkownik/moja-apteka.git
    ```
 2. Zainstaluj zależności:
    ```bash
