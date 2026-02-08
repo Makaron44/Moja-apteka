@@ -8,6 +8,6 @@ export default defineConfig({
   // 'base' musi odpowiadać nazwie Twojego repozytorium na GitHubie
   base: '/Moja-apteka/',
   define: {
-    'process.env': {}
+    'process.env': process.env
   }
 });
