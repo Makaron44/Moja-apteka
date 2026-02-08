@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, BellOff, Info, Smartphone, ShieldCheck, Moon, Sun, RefreshCw, Download, CheckCircle } from 'lucide-react';
+import { Bell, BellOff, Info, Smartphone, ShieldCheck, Moon, Sun, RefreshCw, Download, CheckCircle, Key, Eye, EyeOff } from 'lucide-react';
 import { UserSettings } from '../types';
 
 interface SettingsProps {
@@ -20,6 +20,8 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
   const [updateAvailable, setUpdateAvailable] = useState(false);
   const [updateStatus, setUpdateStatus] = useState<'idle' | 'checking' | 'upToDate' | 'available'>('idle');
   const [swRegistration, setSwRegistration] = useState<ServiceWorkerRegistration | null>(null);
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [apiKeyInput, setApiKeyInput] = useState(settings.geminiApiKey || '');
 
   // Safe check for navigator
   const isIos = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent || '') && !(window as any).MSStream;
@@ -193,24 +195,24 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
           onClick={updateStatus === 'available' ? applyUpdate : checkForUpdates}
           disabled={updateStatus === 'checking'}
           className={`w-full flex items-center justify-between p-4 border rounded-2xl shadow-sm transition-all active:scale-[0.98] ${updateStatus === 'upToDate'
+            ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800'
+            : updateStatus === 'available'
               ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800'
-              : updateStatus === 'available'
-                ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800'
-                : 'bg-white dark:bg-slate-700 border-slate-100 dark:border-slate-600'
+              : 'bg-white dark:bg-slate-700 border-slate-100 dark:border-slate-600'
             }`}
         >
           <div className="flex items-center gap-3">
             {buttonContent.icon}
             <div className="text-left">
               <span className={`font-bold block ${updateStatus === 'upToDate' || updateStatus === 'available'
-                  ? 'text-emerald-800 dark:text-emerald-200'
-                  : 'text-slate-800 dark:text-white'
+                ? 'text-emerald-800 dark:text-emerald-200'
+                : 'text-slate-800 dark:text-white'
                 }`}>
                 {buttonContent.title}
               </span>
               <span className={`text-[10px] uppercase ${updateStatus === 'upToDate' || updateStatus === 'available'
-                  ? 'text-emerald-600 dark:text-emerald-400'
-                  : 'text-slate-400 dark:text-slate-500'
+                ? 'text-emerald-600 dark:text-emerald-400'
+                : 'text-slate-400 dark:text-slate-500'
                 }`}>
                 {buttonContent.subtitle}
               </span>
@@ -222,6 +224,56 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
             </span>
           )}
         </button>
+      </div>
+
+      {/* Gemini API Key Section */}
+      <div className="mb-6">
+        <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-3 px-1">
+          Gemini API (rozpoznawanie leków)
+        </label>
+        <div className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl p-4 shadow-sm">
+          <div className="flex items-center gap-3 mb-3">
+            <Key size={18} className="text-purple-500" />
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Klucz API</span>
+            {settings.geminiApiKey && (
+              <span className="text-[10px] bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full font-bold">
+                Skonfigurowany
+              </span>
+            )}
+          </div>
+          <div className="relative mb-3">
+            <input
+              type={showApiKey ? 'text' : 'password'}
+              placeholder="Wklej swój klucz API Gemini..."
+              value={apiKeyInput}
+              onChange={(e) => setApiKeyInput(e.target.value)}
+              className="w-full px-4 py-3 pr-12 bg-slate-50 dark:bg-slate-600 border border-slate-200 dark:border-slate-500 rounded-xl text-sm text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-purple-500"
+            />
+            <button
+              type="button"
+              onClick={() => setShowApiKey(!showApiKey)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+            >
+              {showApiKey ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+          <button
+            onClick={() => {
+              onUpdateSettings({ ...settings, geminiApiKey: apiKeyInput });
+              alert('Klucz API został zapisany! ✓');
+            }}
+            disabled={!apiKeyInput || apiKeyInput === settings.geminiApiKey}
+            className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-xl font-bold text-sm transition-colors"
+          >
+            Zapisz klucz
+          </button>
+          <p className="mt-3 text-[10px] text-slate-400 dark:text-slate-500 leading-relaxed">
+            Twój klucz jest przechowywany tylko na tym urządzeniu. Uzyskaj go na{' '}
+            <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-purple-500 underline">
+              aistudio.google.com
+            </a>
+          </p>
+        </div>
       </div>
 
       {/* Device Info Card */}

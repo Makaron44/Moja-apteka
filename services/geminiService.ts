@@ -1,17 +1,33 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 
-// Always initialize GoogleGenAI with the API key from process.env.API_KEY
-const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Get API key from localStorage
+const getApiKey = (): string => {
+  if (typeof window !== 'undefined') {
+    const settings = localStorage.getItem('settings');
+    if (settings) {
+      const parsed = JSON.parse(settings);
+      return parsed.geminiApiKey || '';
+    }
+  }
+  return '';
+};
+
+// Initialize GoogleGenAI with the API key from localStorage
+const getAI = () => {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    throw new Error('Brak klucza API Gemini. Dodaj go w Ustawieniach.');
+  }
+  return new GoogleGenAI({ apiKey });
+};
 
 export const analyzeMedicationImage = async (base64Image: string) => {
   const ai = getAI();
   const prompt = `Analyze this medication packaging. Extract the medication name, strength/dosage, recommended frequency if visible, and total number of units in the package. Return the data in JSON format in Polish.`;
 
   try {
-    // Generate content using the multimodal parts structure recommended in guidelines
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.0-flash',
       contents: {
         parts: [
           { text: prompt },
@@ -34,7 +50,6 @@ export const analyzeMedicationImage = async (base64Image: string) => {
       }
     });
 
-    // Access the text property directly (not as a method)
     return JSON.parse(response.text || '{}');
   } catch (error) {
     console.error("Gemini Analysis Error:", error);
@@ -45,9 +60,13 @@ export const analyzeMedicationImage = async (base64Image: string) => {
 export const getMedicationInfo = async (name: string) => {
   const ai = getAI();
   const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
+    model: 'gemini-2.0-flash',
     contents: `Opisz krótko lek ${name}: do czego służy, główne przeciwwskazania i czy należy brać z jedzeniem. Odpowiedz w punktach po polsku.`,
   });
-  // Access the text property directly
   return response.text;
+};
+
+// Check if API key is configured
+export const isApiKeyConfigured = (): boolean => {
+  return getApiKey().length > 0;
 };

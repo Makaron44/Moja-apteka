@@ -30,6 +30,7 @@ export interface UserSettings {
   notificationsEnabled: boolean;
   reminderMinutesBefore: number;
   darkMode: boolean;
+  geminiApiKey?: string;
 }
 
 export type ViewState = 'dashboard' | 'meds' | 'add' | 'edit' | 'inventory' | 'history' | 'settings';
