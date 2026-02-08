@@ -16,10 +16,6 @@ const History: React.FC<HistoryProps> = ({ meds, logs }) => {
   const [customStartDate, setCustomStartDate] = useState<string>('');
   const [customEndDate, setCustomEndDate] = useState<string>('');
 
-  const takenLogs = useMemo(() => {
-    return logs.filter(l => l.status === 'taken');
-  }, [logs]);
-
   const getDateRange = (): { start: string; end: string } => {
     const now = new Date();
     const today = now.toISOString().split('T')[0];
@@ -42,19 +38,25 @@ const History: React.FC<HistoryProps> = ({ meds, logs }) => {
     }
   };
 
-  const filteredLogs = useMemo(() => {
+  const { allLogs, takenLogs } = useMemo(() => {
     const { start, end } = getDateRange();
 
-    return takenLogs.filter(log => {
+    const filtered = logs.filter(log => {
       const matchMed = filterMedId === 'all' || log.medicationId === filterMedId;
-
-      const takenDate = new Date(log.takenAt!).toISOString().split('T')[0];
-      const matchStart = !start || takenDate >= start;
-      const matchEnd = !end || takenDate <= end;
-
+      const matchStart = !start || log.date >= start;
+      const matchEnd = !end || log.date <= end;
       return matchMed && matchStart && matchEnd;
-    }).sort((a, b) => b.takenAt!.localeCompare(a.takenAt!));
-  }, [takenLogs, filterMedId, quickFilter, customStartDate, customEndDate]);
+    });
+
+    // Sort taken logs by takenAt time (descending)
+    const taken = filtered
+      .filter(l => l.status === 'taken')
+      .sort((a, b) => (b.takenAt || '').localeCompare(a.takenAt || ''));
+
+    return { allLogs: filtered, takenLogs: taken };
+  }, [logs, filterMedId, quickFilter, customStartDate, customEndDate]);
+
+  const efficiency = allLogs.length > 0 ? Math.round((takenLogs.length / allLogs.length) * 100) : 0;
 
   const selectedMed = meds.find(m => m.id === filterMedId);
 
@@ -80,7 +82,7 @@ const History: React.FC<HistoryProps> = ({ meds, logs }) => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Historia</h2>
         <div className="bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-300 text-xs font-bold px-3 py-1 rounded-full uppercase flex items-center gap-1">
-          <HistoryIcon size={12} /> {filteredLogs.length} dawek
+          <HistoryIcon size={12} /> {takenLogs.length} dawek
         </div>
       </div>
 
@@ -92,8 +94,8 @@ const History: React.FC<HistoryProps> = ({ meds, logs }) => {
               key={filter.id}
               onClick={() => setQuickFilter(filter.id)}
               className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${quickFilter === filter.id
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-blue-900/50'
-                  : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-blue-900/50'
+                : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                 }`}
             >
               {filter.label}
@@ -192,10 +194,10 @@ const History: React.FC<HistoryProps> = ({ meds, logs }) => {
         <div className="flex justify-between items-end">
           <div>
             <p className="text-slate-400 text-[10px] uppercase font-bold tracking-wider mb-1">Przyjętych dawek</p>
-            <h3 className="text-4xl font-black">{filteredLogs.length}</h3>
+            <h3 className="text-4xl font-black">{takenLogs.length} <span className="text-lg text-slate-500 font-medium">/ {allLogs.length}</span></h3>
           </div>
           <div className="text-right">
-            <p className="text-emerald-400 font-black text-2xl">100%</p>
+            <p className={`${efficiency >= 80 ? 'text-emerald-400' : efficiency >= 50 ? 'text-yellow-400' : 'text-rose-400'} font-black text-2xl`}>{efficiency}%</p>
             <p className="text-slate-400 text-[10px] uppercase font-bold">Skuteczności</p>
           </div>
         </div>
@@ -203,7 +205,7 @@ const History: React.FC<HistoryProps> = ({ meds, logs }) => {
 
       {/* Results List */}
       <div className="space-y-3">
-        {filteredLogs.length === 0 ? (
+        {takenLogs.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
               <HistoryIcon size={24} className="text-slate-400" />
@@ -211,7 +213,7 @@ const History: React.FC<HistoryProps> = ({ meds, logs }) => {
             <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Brak wpisów dla wybranych kryteriów</p>
           </div>
         ) : (
-          filteredLogs.map(log => {
+          takenLogs.map(log => {
             const med = meds.find(m => m.id === log.medicationId);
             return (
               <div key={log.id} className="flex items-center gap-4 p-4 bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl shadow-sm">
