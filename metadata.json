@@ -1,0 +1,8 @@
+
+{
+  "name": "Moje Leki - Inteligentny Asystent",
+  "description": "Twoja osobista apteczka i harmonogram leków. Śledź dawkowanie, zapas leków i otrzymuj inteligentne analizy za pomocą AI.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
