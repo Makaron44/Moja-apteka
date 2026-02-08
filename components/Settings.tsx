@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Bell, BellOff, Info, Smartphone, ShieldCheck, ExternalLink, Moon, Sun } from 'lucide-react';
 import { UserSettings } from '../types';
 
@@ -9,22 +8,33 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
-  const [permissionStatus, setPermissionStatus] = useState<NotificationPermission>(
-    typeof window !== 'undefined' ? Notification.permission : 'default'
-  );
+  // Safe check for Notification API
+  const getNotificationPermission = (): NotificationPermission => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      return Notification.permission;
+    }
+    return 'default';
+  };
 
-  const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-  const isPwa = window.matchMedia('(display-mode: standalone)').matches;
+  const [permissionStatus, setPermissionStatus] = useState<NotificationPermission>(getNotificationPermission());
+
+  // Safe check for navigator
+  const isIos = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent || '') && !(window as any).MSStream;
+  const isPwa = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
 
   const requestPermission = async () => {
-    if (!('Notification' in window)) {
+    if (typeof window === 'undefined' || !('Notification' in window)) {
       alert("Twoja przeglądarka nie obsługuje powiadomień.");
       return;
     }
-    const permission = await Notification.requestPermission();
-    setPermissionStatus(permission);
-    if (permission === 'granted') {
-      onUpdateSettings({ ...settings, notificationsEnabled: true });
+    try {
+      const permission = await Notification.requestPermission();
+      setPermissionStatus(permission);
+      if (permission === 'granted') {
+        onUpdateSettings({ ...settings, notificationsEnabled: true });
+      }
+    } catch (error) {
+      alert("Nie udało się uzyskać uprawnień do powiadomień.");
     }
   };
 
@@ -43,8 +53,8 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
           <button
             onClick={toggleDarkMode}
             className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all ${settings.darkMode
-                ? 'bg-slate-800 text-white'
-                : 'bg-slate-50 dark:bg-slate-600 text-slate-700 dark:text-slate-200'
+              ? 'bg-slate-800 text-white'
+              : 'bg-slate-50 dark:bg-slate-600 text-slate-700 dark:text-slate-200'
               }`}
           >
             <div className="flex items-center gap-3">
@@ -93,8 +103,8 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
             <button
               onClick={requestPermission}
               className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all ${settings.notificationsEnabled && permissionStatus === 'granted'
-                  ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
-                  : 'bg-slate-50 dark:bg-slate-600 text-slate-500 dark:text-slate-300'
+                ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
+                : 'bg-slate-50 dark:bg-slate-600 text-slate-500 dark:text-slate-300'
                 }`}
             >
               <div className="flex items-center gap-3">
@@ -121,8 +131,8 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
                   key={mins}
                   onClick={() => onUpdateSettings({ ...settings, reminderMinutesBefore: mins })}
                   className={`py-3 rounded-2xl text-sm font-bold transition-all border ${settings.reminderMinutesBefore === mins
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-100 dark:shadow-blue-900/50'
-                      : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-100 dark:border-slate-600'
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-100 dark:shadow-blue-900/50'
+                    : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-100 dark:border-slate-600'
                     }`}
                 >
                   {mins === 0 ? 'O czasie' : `${mins} min`}
