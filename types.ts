@@ -29,6 +29,7 @@ export interface MedicationLog {
 export interface UserSettings {
   notificationsEnabled: boolean;
   reminderMinutesBefore: number;
+  darkMode: boolean;
 }
 
 export type ViewState = 'dashboard' | 'meds' | 'add' | 'edit' | 'inventory' | 'history' | 'settings';

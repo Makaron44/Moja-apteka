@@ -12,12 +12,12 @@ import { INITIAL_MEDS } from './constants';
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('dashboard');
   const [editingMedicationId, setEditingMedicationId] = useState<string | null>(null);
-  
+
   const [meds, setMeds] = useState<Medication[]>(() => {
     const saved = localStorage.getItem('meds');
     return saved ? JSON.parse(saved) : INITIAL_MEDS;
   });
-  
+
   const [logs, setLogs] = useState<MedicationLog[]>(() => {
     const saved = localStorage.getItem('logs');
     return saved ? JSON.parse(saved) : [];
@@ -25,19 +25,28 @@ const App: React.FC = () => {
 
   const [settings, setSettings] = useState<UserSettings>(() => {
     const saved = localStorage.getItem('settings');
-    return saved ? JSON.parse(saved) : { notificationsEnabled: false, reminderMinutesBefore: 0 };
+    return saved ? JSON.parse(saved) : { notificationsEnabled: false, reminderMinutesBefore: 0, darkMode: false };
   });
 
   useEffect(() => localStorage.setItem('meds', JSON.stringify(meds)), [meds]);
   useEffect(() => localStorage.setItem('logs', JSON.stringify(logs)), [logs]);
   useEffect(() => localStorage.setItem('settings', JSON.stringify(settings)), [settings]);
 
+  // Dark mode effect
+  useEffect(() => {
+    if (settings.darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [settings.darkMode]);
+
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
     setLogs(prev => {
       const existingLogsMap = new Set(prev.map(l => `${l.medicationId}-${l.plannedTime}-${l.date}`));
       const newLogs: MedicationLog[] = [];
-      
+
       meds.forEach(med => {
         med.timesPerDay.forEach(time => {
           const key = `${med.id}-${time}-${today}`;
@@ -93,16 +102,16 @@ const App: React.FC = () => {
       case 'add': return <MedicationForm onSave={handleAddMed} onCancel={() => setView('dashboard')} />;
       case 'meds': return (
         <div className="p-6 space-y-4">
-          <h2 className="text-2xl font-bold text-slate-800 mb-6 font-black uppercase tracking-tight">Twoja Apteczka</h2>
-          {meds.length === 0 && <p className="text-slate-400 text-center py-10">Brak dodanych leków.</p>}
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6 font-black uppercase tracking-tight">Twoja Apteczka</h2>
+          {meds.length === 0 && <p className="text-slate-400 dark:text-slate-500 text-center py-10">Brak dodanych leków.</p>}
           {meds.map(m => (
-            <div key={m.id} onClick={() => { setEditingMedicationId(m.id); setView('edit'); }} className="bg-white border border-slate-100 p-5 rounded-[2rem] flex items-center gap-4 shadow-sm cursor-pointer group hover:border-blue-200 transition-all">
+            <div key={m.id} onClick={() => { setEditingMedicationId(m.id); setView('edit'); }} className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 p-5 rounded-[2rem] flex items-center gap-4 shadow-sm cursor-pointer group hover:border-blue-200 dark:hover:border-blue-700 transition-all">
               <div className={`w-14 h-14 ${m.color} rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-current/10`}>
                 <div className="font-bold text-[10px] text-center leading-tight uppercase">{m.dosage}</div>
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-slate-800 truncate group-hover:text-blue-600 transition-colors">{m.name}</h3>
-                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{m.timesPerDay.join(' • ')}</p>
+                <h3 className="font-bold text-slate-800 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{m.name}</h3>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">{m.timesPerDay.join(' • ')}</p>
               </div>
             </div>
           ))}

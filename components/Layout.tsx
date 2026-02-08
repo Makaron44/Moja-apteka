@@ -19,11 +19,11 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, onViewChange }) =
   ];
 
   return (
-    <div className="min-h-screen pb-24 flex flex-col max-w-md mx-auto bg-white shadow-xl relative">
+    <div className="min-h-screen pb-24 flex flex-col max-w-md mx-auto bg-white dark:bg-slate-800 shadow-xl relative">
       {/* Top Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 py-4 flex justify-between items-center">
-        <h1 
-          className="text-xl font-bold text-slate-800 flex items-center gap-2 cursor-pointer"
+      <header className="sticky top-0 z-40 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-700 px-6 py-4 flex justify-between items-center">
+        <h1
+          className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2 cursor-pointer"
           onClick={() => onViewChange('dashboard')}
         >
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -32,15 +32,14 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, onViewChange }) =
           Moje Leki
         </h1>
         <div className="flex items-center gap-3">
-          <button 
+          <button
             onClick={() => onViewChange('settings')}
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-              activeView === 'settings' ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-400'
-            }`}
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${activeView === 'settings' ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400' : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-300'
+              }`}
           >
             <SettingsIcon size={20} />
           </button>
-          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
+          <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
             <img src="https://picsum.photos/seed/user/100/100" alt="Avatar" className="w-full h-full object-cover" />
           </div>
         </div>
@@ -52,17 +51,17 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, onViewChange }) =
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-slate-100 px-2 py-3 flex justify-around items-center z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 px-2 py-3 flex justify-around items-center z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeView === item.id;
-          
+
           if (item.primary) {
             return (
               <button
                 key={item.id}
                 onClick={() => onViewChange(item.id as ViewState)}
-                className="relative -top-6 bg-blue-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200 active:scale-95 transition-transform"
+                className="relative -top-6 bg-blue-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200 dark:shadow-blue-900/50 active:scale-95 transition-transform"
               >
                 <Icon size={28} />
               </button>
@@ -73,9 +72,8 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, onViewChange }) =
             <button
               key={item.id}
               onClick={() => onViewChange(item.id as ViewState)}
-              className={`flex flex-col items-center gap-1 transition-colors ${
-                isActive ? 'text-blue-600' : 'text-slate-400'
-              }`}
+              className={`flex flex-col items-center gap-1 transition-colors ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-slate-500'
+                }`}
             >
               <Icon size={24} />
               <span className="text-[10px] font-medium uppercase tracking-wider">{item.label}</span>
