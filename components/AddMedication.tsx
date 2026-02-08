@@ -1,9 +1,8 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { Camera, Save, X, Sparkles, Loader2, Info, Volume2, Vibrate, BellRing } from 'lucide-react';
+import { Camera, Save, X, Sparkles, Loader2, Info, BellRing } from 'lucide-react';
 import { analyzeMedicationImage, getMedicationInfo } from '../services/geminiService';
 import { Medication, MedicationUnit } from '../types';
-import { COLORS, UNITS, SOUNDS, VIBRATIONS } from '../constants';
+import { COLORS, UNITS } from '../constants';
 
 interface MedicationFormProps {
   initialData?: Medication;
@@ -211,54 +210,7 @@ const MedicationForm: React.FC<MedicationFormProps> = ({ initialData, onSave, on
           </div>
         </section>
 
-        {/* Custom Reminders */}
-        <section className="bg-slate-50 dark:bg-slate-700/50 p-5 rounded-3xl space-y-4 border border-slate-200/50 dark:border-slate-600">
-          <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase flex items-center gap-2 mb-2">
-            <Sparkles size={14} className="text-blue-500" /> Powiadomienia niestandardowe
-          </h3>
 
-          <div>
-            <label className="flex items-center gap-2 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-2">
-              <Volume2 size={14} /> Dźwięk przypomnienia
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              {SOUNDS.map(sound => (
-                <button
-                  key={sound.id}
-                  type="button"
-                  onClick={() => setFormData({ ...formData, reminderSound: sound.id })}
-                  className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all ${formData.reminderSound === sound.id
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-100 dark:shadow-blue-900/50'
-                      : 'bg-white dark:bg-slate-600 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-500'
-                    }`}
-                >
-                  {sound.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="flex items-center gap-2 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-2">
-              <Vibrate size={14} /> Wibracja
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              {VIBRATIONS.map(vibration => (
-                <button
-                  key={vibration.id}
-                  type="button"
-                  onClick={() => setFormData({ ...formData, vibrationPattern: vibration.id })}
-                  className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all ${formData.vibrationPattern === vibration.id
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-100 dark:shadow-blue-900/50'
-                      : 'bg-white dark:bg-slate-600 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-500'
-                    }`}
-                >
-                  {vibration.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Inventory */}
         <div className="grid grid-cols-2 gap-4">
