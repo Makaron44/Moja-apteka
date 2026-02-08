@@ -30,6 +30,7 @@ jobs:
           cp icon.svg dist/ || true
           cp manifest.json dist/ || true
           cp sw.js dist/ || true
+          cp apple-touch-icon.png dist/ || true
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
