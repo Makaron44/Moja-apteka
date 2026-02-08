@@ -5,6 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Moje Leki - Asystent Zdrowia</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#3B82F6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Moje Leki">
+    <link rel="manifest" href="/Moja-apteka/assets/manifest-Dcn71WXg.json">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/Moja-apteka/assets/icon-BEiK39l5.svg">
+    <link rel="apple-touch-icon" href="/Moja-apteka/assets/icon-BEiK39l5.svg">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -43,6 +55,16 @@
                 transform: translateY(0);
             }
         }
+
+        /* Hide scrollbar for quick filters */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 
     <script type="importmap">
@@ -58,12 +80,38 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="/Moja-apteka/assets/index-DiEqUazd.js"></script>
+  <script type="module" crossorigin src="/Moja-apteka/assets/index-DfEjvOgK.js"></script>
   <link rel="stylesheet" crossorigin href="/Moja-apteka/assets/index-BNH_FPoZ.css">
 </head>
 
 <body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
     <div id="root"></div>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('SW registered:', registration);
+
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New content available
+                                    window.dispatchEvent(new CustomEvent('swUpdate', { detail: registration }));
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('SW registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 
 </html>
