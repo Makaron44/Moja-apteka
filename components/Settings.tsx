@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Bell, BellOff, Info, Smartphone, ShieldCheck, ExternalLink, Moon, Sun } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Bell, BellOff, Info, Smartphone, ShieldCheck, ExternalLink, Moon, Sun, RefreshCw, Download } from 'lucide-react';
 import { UserSettings } from '../types';
 
 interface SettingsProps {
@@ -17,10 +17,24 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
   };
 
   const [permissionStatus, setPermissionStatus] = useState<NotificationPermission>(getNotificationPermission());
+  const [updateAvailable, setUpdateAvailable] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [swRegistration, setSwRegistration] = useState<ServiceWorkerRegistration | null>(null);
 
   // Safe check for navigator
   const isIos = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent || '') && !(window as any).MSStream;
   const isPwa = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+
+  // Listen for service worker updates
+  useEffect(() => {
+    const handleSwUpdate = (event: CustomEvent) => {
+      setUpdateAvailable(true);
+      setSwRegistration(event.detail);
+    };
+
+    window.addEventListener('swUpdate', handleSwUpdate as EventListener);
+    return () => window.removeEventListener('swUpdate', handleSwUpdate as EventListener);
+  }, []);
 
   const requestPermission = async () => {
     if (typeof window === 'undefined' || !('Notification' in window)) {
@@ -42,12 +56,62 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
     onUpdateSettings({ ...settings, darkMode: !settings.darkMode });
   };
 
+  const checkForUpdates = async () => {
+    setIsUpdating(true);
+    try {
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.getRegistration();
+        if (registration) {
+          await registration.update();
+          // Wait a moment for the update check
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          if (!updateAvailable) {
+            alert('Aplikacja jest aktualna! ✓');
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Update check failed:', error);
+    }
+    setIsUpdating(false);
+  };
+
+  const applyUpdate = () => {
+    if (swRegistration && swRegistration.waiting) {
+      swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+      window.location.reload();
+    }
+  };
+
+  const appVersion = '1.0.0';
+
   return (
     <div className="p-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-6">Ustawienia</h2>
 
+      {/* Update Available Banner */}
+      {updateAvailable && (
+        <div className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-2xl animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Download className="text-emerald-600 dark:text-emerald-400" size={20} />
+              <div>
+                <p className="font-bold text-emerald-800 dark:text-emerald-200">Dostępna aktualizacja!</p>
+                <p className="text-xs text-emerald-600 dark:text-emerald-400">Kliknij aby zainstalować</p>
+              </div>
+            </div>
+            <button
+              onClick={applyUpdate}
+              className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold text-sm"
+            >
+              Aktualizuj
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Dark Mode Toggle */}
-      <div className="mb-8">
+      <div className="mb-6">
         <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-3 px-1">Wygląd</label>
         <div className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-3xl p-2 shadow-sm">
           <button
@@ -72,8 +136,30 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
         </div>
       </div>
 
+      {/* Check for Updates Button */}
+      <div className="mb-6">
+        <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-3 px-1">Aktualizacje</label>
+        <button
+          onClick={checkForUpdates}
+          disabled={isUpdating}
+          className="w-full flex items-center justify-between p-4 bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl shadow-sm transition-all active:scale-[0.98]"
+        >
+          <div className="flex items-center gap-3">
+            <RefreshCw size={20} className={`text-blue-600 dark:text-blue-400 ${isUpdating ? 'animate-spin' : ''}`} />
+            <div className="text-left">
+              <span className="font-bold text-slate-800 dark:text-white block">
+                {isUpdating ? 'Sprawdzam...' : 'Sprawdź aktualizacje'}
+              </span>
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase">
+                Wersja {appVersion}
+              </span>
+            </div>
+          </div>
+        </button>
+      </div>
+
       {/* Device Info Card */}
-      <div className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-3xl p-5 mb-8 shadow-sm">
+      <div className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-3xl p-5 mb-6 shadow-sm">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 bg-slate-100 dark:bg-slate-600 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300">
             <Smartphone size={20} />
@@ -89,7 +175,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
             <Info className="text-amber-500 shrink-0" size={18} />
             <div className="text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
               <p className="font-bold mb-1">Uwaga dla iPhone:</p>
-              Powiadomienia na iOS wymagają dodania aplikacji do ekranu głównego. Użyj przycisku <strong>Udostępnij</strong> i wybierz <strong>"Dodaj do ekranu głównego"</strong>.
+              Aby dodać ikonę na pulpit, użyj przycisku <strong>Udostępnij</strong> (□↑) i wybierz <strong>"Dodaj do ekranu głównego"</strong>.
             </div>
           </div>
         )}
@@ -146,19 +232,10 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
           <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-700 rounded-2xl">
             <ShieldCheck className="text-slate-400 dark:text-slate-500 shrink-0" size={18} />
             <div className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Twoje dane są bezpieczne. Wszystkie przypomnienia są przetwarzane lokalnie na tym telefonie.
+              Twoje dane są bezpieczne. Wszystkie informacje są przechowywane lokalnie na tym urządzeniu.
             </div>
           </div>
         </div>
-
-        <a
-          href="https://ai.google.dev/gemini-api/docs/billing"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase py-4"
-        >
-          <ExternalLink size={14} /> Dokumentacja Płatności API
-        </a>
       </div>
     </div>
   );
