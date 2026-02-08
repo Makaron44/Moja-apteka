@@ -11,11 +11,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Moje Leki">
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="/Moja-apteka/manifest.json">
 
     <!-- Icons -->
-    <link rel="icon" type="image/svg+xml" href="./icon.svg">
-    <link rel="apple-touch-icon" href="./icon.svg">
+    <link rel="icon" type="image/svg+xml" href="/Moja-apteka/icon.svg">
+    <link rel="apple-touch-icon" href="/Moja-apteka/icon.svg">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -79,18 +79,18 @@
   }
 }
 </script>
-    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="/Moja-apteka/index.css">
 </head>
 
 <body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
     <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
+    <script type="module" src="/Moja-apteka/index.tsx"></script>
 
     <!-- Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
+                navigator.serviceWorker.register('/Moja-apteka/sw.js')
                     .then((registration) => {
                         console.log('SW registered:', registration);
 

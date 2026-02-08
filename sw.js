@@ -1,10 +1,11 @@
-const CACHE_NAME = 'moje-leki-v1';
+const CACHE_NAME = 'moje-leki-v2';
+const BASE_PATH = '/Moja-apteka';
 const urlsToCache = [
-    './',
-    './index.html',
-    './index.css',
-    './icon.svg',
-    './manifest.json'
+    `${BASE_PATH}/`,
+    `${BASE_PATH}/index.html`,
+    `${BASE_PATH}/index.css`,
+    `${BASE_PATH}/icon.svg`,
+    `${BASE_PATH}/manifest.json`
 ];
 
 self.addEventListener('install', (event) => {

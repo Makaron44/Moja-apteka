@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, BellOff, Info, Smartphone, ShieldCheck, ExternalLink, Moon, Sun, RefreshCw, Download } from 'lucide-react';
+import { Bell, BellOff, Info, Smartphone, ShieldCheck, Moon, Sun, RefreshCw, Download, CheckCircle } from 'lucide-react';
 import { UserSettings } from '../types';
 
 interface SettingsProps {
@@ -18,7 +18,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
 
   const [permissionStatus, setPermissionStatus] = useState<NotificationPermission>(getNotificationPermission());
   const [updateAvailable, setUpdateAvailable] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [updateStatus, setUpdateStatus] = useState<'idle' | 'checking' | 'upToDate' | 'available'>('idle');
   const [swRegistration, setSwRegistration] = useState<ServiceWorkerRegistration | null>(null);
 
   // Safe check for navigator
@@ -29,6 +29,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
   useEffect(() => {
     const handleSwUpdate = (event: CustomEvent) => {
       setUpdateAvailable(true);
+      setUpdateStatus('available');
       setSwRegistration(event.detail);
     };
 
@@ -57,33 +58,82 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
   };
 
   const checkForUpdates = async () => {
-    setIsUpdating(true);
+    setUpdateStatus('checking');
+
     try {
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.getRegistration();
         if (registration) {
           await registration.update();
-          // Wait a moment for the update check
-          await new Promise(resolve => setTimeout(resolve, 1500));
+
+          // Wait for update check to complete
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          // If no update was found after waiting
           if (!updateAvailable) {
-            alert('Aplikacja jest aktualna! ✓');
+            setUpdateStatus('upToDate');
+            // Reset to idle after showing success
+            setTimeout(() => setUpdateStatus('idle'), 3000);
           }
+        } else {
+          // No service worker, show up to date
+          setUpdateStatus('upToDate');
+          setTimeout(() => setUpdateStatus('idle'), 3000);
         }
+      } else {
+        // Service workers not supported
+        setUpdateStatus('upToDate');
+        setTimeout(() => setUpdateStatus('idle'), 3000);
       }
     } catch (error) {
       console.error('Update check failed:', error);
+      setUpdateStatus('upToDate');
+      setTimeout(() => setUpdateStatus('idle'), 3000);
     }
-    setIsUpdating(false);
   };
 
   const applyUpdate = () => {
     if (swRegistration && swRegistration.waiting) {
       swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
       window.location.reload();
+    } else {
+      // Force reload to get latest version
+      window.location.reload();
     }
   };
 
-  const appVersion = '1.0.0';
+  const appVersion = '1.0.1';
+
+  const getUpdateButtonContent = () => {
+    switch (updateStatus) {
+      case 'checking':
+        return {
+          icon: <RefreshCw size={20} className="text-blue-600 dark:text-blue-400 animate-spin" />,
+          title: 'Sprawdzam aktualizacje...',
+          subtitle: 'Proszę czekać'
+        };
+      case 'upToDate':
+        return {
+          icon: <CheckCircle size={20} className="text-emerald-600 dark:text-emerald-400" />,
+          title: 'Aplikacja jest aktualna!',
+          subtitle: `Wersja ${appVersion}`
+        };
+      case 'available':
+        return {
+          icon: <Download size={20} className="text-emerald-600 dark:text-emerald-400" />,
+          title: 'Dostępna aktualizacja!',
+          subtitle: 'Kliknij aby zainstalować'
+        };
+      default:
+        return {
+          icon: <RefreshCw size={20} className="text-blue-600 dark:text-blue-400" />,
+          title: 'Sprawdź aktualizacje',
+          subtitle: `Wersja ${appVersion}`
+        };
+    }
+  };
+
+  const buttonContent = getUpdateButtonContent();
 
   return (
     <div className="p-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -102,7 +152,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
             </div>
             <button
               onClick={applyUpdate}
-              className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold text-sm"
+              className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold text-sm active:scale-95 transition-transform"
             >
               Aktualizuj
             </button>
@@ -140,21 +190,37 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
       <div className="mb-6">
         <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-3 px-1">Aktualizacje</label>
         <button
-          onClick={checkForUpdates}
-          disabled={isUpdating}
-          className="w-full flex items-center justify-between p-4 bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl shadow-sm transition-all active:scale-[0.98]"
+          onClick={updateStatus === 'available' ? applyUpdate : checkForUpdates}
+          disabled={updateStatus === 'checking'}
+          className={`w-full flex items-center justify-between p-4 border rounded-2xl shadow-sm transition-all active:scale-[0.98] ${updateStatus === 'upToDate'
+              ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800'
+              : updateStatus === 'available'
+                ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800'
+                : 'bg-white dark:bg-slate-700 border-slate-100 dark:border-slate-600'
+            }`}
         >
           <div className="flex items-center gap-3">
-            <RefreshCw size={20} className={`text-blue-600 dark:text-blue-400 ${isUpdating ? 'animate-spin' : ''}`} />
+            {buttonContent.icon}
             <div className="text-left">
-              <span className="font-bold text-slate-800 dark:text-white block">
-                {isUpdating ? 'Sprawdzam...' : 'Sprawdź aktualizacje'}
+              <span className={`font-bold block ${updateStatus === 'upToDate' || updateStatus === 'available'
+                  ? 'text-emerald-800 dark:text-emerald-200'
+                  : 'text-slate-800 dark:text-white'
+                }`}>
+                {buttonContent.title}
               </span>
-              <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase">
-                Wersja {appVersion}
+              <span className={`text-[10px] uppercase ${updateStatus === 'upToDate' || updateStatus === 'available'
+                  ? 'text-emerald-600 dark:text-emerald-400'
+                  : 'text-slate-400 dark:text-slate-500'
+                }`}>
+                {buttonContent.subtitle}
               </span>
             </div>
           </div>
+          {updateStatus === 'available' && (
+            <span className="px-3 py-1 bg-emerald-600 text-white rounded-lg text-xs font-bold">
+              Instaluj
+            </span>
+          )}
         </button>
       </div>
 
@@ -174,8 +240,8 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
           <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-100 dark:border-amber-800 rounded-2xl p-4 flex gap-3">
             <Info className="text-amber-500 shrink-0" size={18} />
             <div className="text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
-              <p className="font-bold mb-1">Uwaga dla iPhone:</p>
-              Aby dodać ikonę na pulpit, użyj przycisku <strong>Udostępnij</strong> (□↑) i wybierz <strong>"Dodaj do ekranu głównego"</strong>.
+              <p className="font-bold mb-1">Dodaj ikonę na pulpit:</p>
+              Kliknij <strong>Udostępnij</strong> (□↑) → <strong>"Dodaj do ekranu głównego"</strong>
             </div>
           </div>
         )}
@@ -184,7 +250,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
       {/* Notifications Toggle */}
       <div className="space-y-6">
         <div>
-          <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-3 px-1">Powiadomienia push</label>
+          <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-3 px-1">Powiadomienia</label>
           <div className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-3xl p-2 shadow-sm">
             <button
               onClick={requestPermission}
@@ -232,7 +298,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdateSettings }) => {
           <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-700 rounded-2xl">
             <ShieldCheck className="text-slate-400 dark:text-slate-500 shrink-0" size={18} />
             <div className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Twoje dane są bezpieczne. Wszystkie informacje są przechowywane lokalnie na tym urządzeniu.
+              Twoje dane są bezpieczne i przechowywane lokalnie na urządzeniu.
             </div>
           </div>
         </div>
