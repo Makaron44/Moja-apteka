@@ -55,7 +55,8 @@ const MedicationForm: React.FC<MedicationFormProps> = ({ initialData, onSave, on
         setAiInfo(info || null);
       };
     } catch (err) {
-      alert("Nie udało się przeanalizować zdjęcia. Spróbuj wpisać dane ręcznie.");
+      const errorMessage = err instanceof Error ? err.message : 'Nieznany błąd';
+      alert(`Nie udało się przeanalizować zdjęcia. Błąd: ${errorMessage}`);
     } finally {
       setLoading(false);
     }
