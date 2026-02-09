@@ -94,7 +94,7 @@ const MedicationForm: React.FC<MedicationFormProps> = ({ initialData, onSave, on
           className="hidden"
           ref={fileInputRef}
           onChange={handleFileChange}
-          capture="environment"
+          onChange={handleFileChange}
         />
         <button
           onClick={() => fileInputRef.current?.click()}
@@ -111,7 +111,7 @@ const MedicationForm: React.FC<MedicationFormProps> = ({ initialData, onSave, on
               <div className="w-12 h-12 bg-white dark:bg-slate-700 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                 <Camera size={24} />
               </div>
-              <span className="font-medium">{isEditing ? 'Przeskanuj ponownie AI' : 'Zeskanuj opakowanie AI'}</span>
+              <span className="font-medium">{isEditing ? 'Przeskanuj ponownie AI' : 'Zeskanuj lub wybierz zdjęcie'}</span>
               <p className="text-[10px] text-blue-400 dark:text-blue-500 uppercase font-bold flex items-center gap-1">
                 <Sparkles size={10} /> Powered by Gemini
               </p>
