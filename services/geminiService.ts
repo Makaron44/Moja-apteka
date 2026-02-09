@@ -60,10 +60,22 @@ export const analyzeMedicationImage = async (base64Image: string) => {
 export const getMedicationInfo = async (name: string) => {
   const ai = getAI();
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash',
+    model: 'gemini-2.5-flash',
     contents: `Opisz krótko lek ${name}: do czego służy, główne przeciwwskazania i czy należy brać z jedzeniem. Odpowiedz w punktach po polsku.`,
   });
   return response.text;
+};
+
+export const listAvailableModels = async () => {
+  const ai = getAI();
+  try {
+    const response = await ai.models.list();
+    console.log("Dostępne modele:", response);
+    return response;
+  } catch (error) {
+    console.error("Błąd podczas pobierania listy modeli:", error);
+    return null;
+  }
 };
 
 // Check if API key is configured

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Camera, Save, X, Sparkles, Loader2, Info, BellRing } from 'lucide-react';
-import { analyzeMedicationImage, getMedicationInfo } from '../services/geminiService';
+import { analyzeMedicationImage, getMedicationInfo, listAvailableModels } from '../services/geminiService';
 import { Medication, MedicationUnit } from '../types';
 import { COLORS, UNITS } from '../constants';
 
@@ -56,7 +56,14 @@ const MedicationForm: React.FC<MedicationFormProps> = ({ initialData, onSave, on
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Nieznany błąd';
-      alert(`Nie udało się przeanalizować zdjęcia. Błąd: ${errorMessage}`);
+      console.error("Szczegóły błędu analizy:", err);
+
+      // Próba wylistowania dostępnych modeli dla celów debugowania
+      listAvailableModels().then(models => {
+        console.log("Możliwe, że wybrany model nie jest dostępny. Lista dostępnych modeli:", models);
+      });
+
+      alert(`Nie udało się przeanalizować zdjęcia. Błąd: ${errorMessage}\n\nSprawdź konsolę (F12), aby zobaczyć listę dostępnych modeli.`);
     } finally {
       setLoading(false);
     }
