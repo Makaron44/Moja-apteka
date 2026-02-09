@@ -27,7 +27,7 @@ export const analyzeMedicationImage = async (base64Image: string) => {
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-1.5-flash',
       contents: {
         parts: [
           { text: prompt },
@@ -60,7 +60,7 @@ export const analyzeMedicationImage = async (base64Image: string) => {
 export const getMedicationInfo = async (name: string) => {
   const ai = getAI();
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash',
+    model: 'gemini-1.5-flash',
     contents: `Opisz krótko lek ${name}: do czego służy, główne przeciwwskazania i czy należy brać z jedzeniem. Odpowiedz w punktach po polsku.`,
   });
   return response.text;
