@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0f172a">
-    <title>Nawigator Rzeczywistości</title>
+    <title>Nawigator RzeczywistoĹ›ci</title>
 
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3242/3242257.png">
     <link rel="manifest" href="manifest.json">
@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* FIX PWA: Dodatkowy padding na dole body, żeby treść nie chowała się pod menu */
+        /* FIX PWA: Dodatkowy padding na dole body, ĹĽeby treĹ›Ä‡ nie chowaĹ‚a siÄ™ pod menu */
         html,
         body {
             height: 100%;
@@ -116,7 +116,7 @@
             opacity: 1;
         }
 
-        /* Modal Generalny (Domyślnie na dole - szuflada) */
+        /* Modal Generalny (DomyĹ›lnie na dole - szuflada) */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -133,12 +133,12 @@
             animation: fadeIn 0.2s ease-out;
         }
 
-        /* Modal Wyśrodkowany (Dla Perełek) */
+        /* Modal WyĹ›rodkowany (Dla PereĹ‚ek) */
         .modal-overlay.center-modal {
             align-items: center;
         }
 
-        /* Zawartość Modala Formularza (Szuflada z dołu) */
+        /* ZawartoĹ›Ä‡ Modala Formularza (Szuflada z doĹ‚u) */
         .modal-content {
             width: 100%;
             max-width: 480px;
@@ -151,7 +151,7 @@
             overflow-y: auto;
         }
 
-        /* Animacja pulsującego obramowania dla środkowego modala */
+        /* Animacja pulsujÄ…cego obramowania dla Ĺ›rodkowego modala */
         @keyframes pulseGlow {
 
             0%,
@@ -166,14 +166,14 @@
             }
         }
 
-        /* Zawartość Modala Perełki (Wyśrodkowane okno z pulsowaniem) */
+        /* ZawartoĹ›Ä‡ Modala PereĹ‚ki (WyĹ›rodkowane okno z pulsowaniem) */
         .modal-view-content {
             width: 90%;
             max-width: 400px;
             background: #1e293b;
             border-radius: 1.5rem;
             padding: 1.5rem;
-            /* Połączenie animacji pojawiania się i pulsowania */
+            /* PoĹ‚Ä…czenie animacji pojawiania siÄ™ i pulsowania */
             animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), pulseGlow 3s infinite ease-in-out;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -256,11 +256,11 @@
             bottom: 0;
             left: 0;
             right: 0;
-            /* Stała wysokość treści + bezpieczna strefa na dole */
+            /* StaĹ‚a wysokoĹ›Ä‡ treĹ›ci + bezpieczna strefa na dole */
             height: calc(65px + env(safe-area-inset-bottom, 20px));
             padding-bottom: env(safe-area-inset-bottom, 20px);
             background: rgba(15, 23, 42, 0.98);
-            /* Bardziej nieprzezroczyste tło */
+            /* Bardziej nieprzezroczyste tĹ‚o */
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             z-index: 9999;
@@ -271,7 +271,7 @@
             padding-top: 8px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
-            /* Zapobieganie przesunięciom przy zmianie wysokości viewportu */
+            /* Zapobieganie przesuniÄ™ciom przy zmianie wysokoĹ›ci viewportu */
             transform: translateZ(0);
         }
 
@@ -283,7 +283,7 @@
             justify-content: center;
             gap: 4px;
             height: 45px;
-            /* Wysokość samego przycisku wewnątrz paska */
+            /* WysokoĹ›Ä‡ samego przycisku wewnÄ…trz paska */
         }
 
         @keyframes slideUp {
@@ -329,7 +329,7 @@
         <div>
             <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
                 Nawigator</h1>
-            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic">Transerfing Rzeczywistości
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic">Transerfing RzeczywistoĹ›ci
             </p>
         </div>
         <button onclick="switchTab('settings')" class="p-3 glass rounded-2xl transition-all active:scale-95">
@@ -358,13 +358,13 @@
                                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                                 <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                             </svg>
-                            ODSŁUCHAJ
+                            ODSĹUCHAJ
                         </button>
                         <button onclick="resetAmalgam()"
                             class="text-xs text-slate-500 underline block mx-auto mt-2">Ustaw nowy cel</button>
                     </div>
                     <div id="amalgam-form" class="space-y-4">
-                        <p class="text-xs text-slate-400">Co Cię dziś stresuje?</p>
+                        <p class="text-xs text-slate-400">Co CiÄ™ dziĹ› stresuje?</p>
                         <div class="flex gap-2">
                             <input type="text" id="challenge-input" placeholder="Wpisz problem..."
                                 class="flex-1 rounded-2xl px-4 py-3">
@@ -389,7 +389,7 @@
                     <div class="breathe-container">
                         <div class="breathe-circle"></div>
                     </div>
-                    <p class="text-[10px] text-slate-500 uppercase tracking-widest text-center mt-2">Wdech • Spokój •
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest text-center mt-2">Wdech â€˘ SpokĂłj â€˘
                         Wydech</p>
                 </div>
             </section>
@@ -397,7 +397,7 @@
             <section class="space-y-3">
                 <div class="flex justify-between items-center px-1">
                     <h2 class="text-sm font-bold text-red-400">SOS</h2>
-                    <button onclick="openModal('pearl', '🚨 SOS')" class="text-slate-400 p-2"><svg width="24"
+                    <button onclick="openModal('pearl', 'đźš¨ SOS')" class="text-slate-400 p-2"><svg width="24"
                             height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="12" y1="8" x2="12" y2="16"></line>
@@ -412,7 +412,7 @@
             <div class="flex flex-col gap-4 mb-4">
                 <div class="flex justify-between items-center px-1">
                     <h2 class="text-xl font-bold text-blue-400">Baza Wiedzy</h2>
-                    <button onclick="openModal('pearl', '🧠 ZASADA')"
+                    <button onclick="openModal('pearl', 'đź§  ZASADA')"
                         class="bg-blue-600 p-3 rounded-full text-white shadow-lg active:scale-90"><svg width="24"
                             height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="12" y1="8" x2="12" y2="16"></line>
@@ -455,7 +455,7 @@
                 </div>
                 <div id="chart-container" class="w-full h-full relative z-10"></div>
             </div>
-            <p class="text-center text-[10px] text-slate-500 mt-4">Ostatnie 7 dni aktywności</p>
+            <p class="text-center text-[10px] text-slate-500 mt-4">Ostatnie 7 dni aktywnoĹ›ci</p>
         </div>
 
         <div id="tab-settings" class="view-section">
@@ -500,7 +500,7 @@
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
-            <span class="text-[10px] font-bold">Dziś</span>
+            <span class="text-[10px] font-bold">DziĹ›</span>
         </button>
         <button onclick="switchTab('wiedza')"
             class="nav-btn nav-btn-fixed text-slate-500 active:scale-95 transition-transform" data-target="wiedza">
@@ -545,7 +545,7 @@
     <div id="modal-pearl" class="modal-overlay" onclick="handleModalClick(event, 'pearl')">
         <div class="modal-content glass">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-blue-400 text-lg">Nowa Perełka</h3>
+                <h3 class="font-bold text-blue-400 text-lg">Nowa PereĹ‚ka</h3>
                 <button onclick="closeModal('pearl')" class="p-2 text-slate-400"><svg width="24" height="24"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -554,12 +554,12 @@
             </div>
             <div class="space-y-4">
                 <select id="p-cat" class="w-full rounded-2xl p-4">
-                    <option value="🚨 SOS">🚨 SOS</option>
-                    <option value="🎥 SLAJD">🎥 SLAJD</option>
-                    <option value="🧠 ZASADA">🧠 ZASADA</option>
+                    <option value="đźš¨ SOS">đźš¨ SOS</option>
+                    <option value="đźŽĄ SLAJD">đźŽĄ SLAJD</option>
+                    <option value="đź§  ZASADA">đź§  ZASADA</option>
                 </select>
-                <input id="p-title" placeholder="Tytuł..." class="w-full rounded-2xl p-4">
-                <textarea id="p-desc" placeholder="Treść..." class="w-full rounded-2xl p-4 h-24"></textarea>
+                <input id="p-title" placeholder="TytuĹ‚..." class="w-full rounded-2xl p-4">
+                <textarea id="p-desc" placeholder="TreĹ›Ä‡..." class="w-full rounded-2xl p-4 h-24"></textarea>
                 <input id="p-affirm" placeholder="Afirmacja..." class="w-full rounded-2xl p-4">
                 <button type="button" onclick="addPearl()"
                     class="w-full py-4 bg-blue-600 rounded-2xl font-bold text-white shadow-lg">ZAPISZ</button>
@@ -580,12 +580,12 @@
             <div class="space-y-5">
                 <div>
                     <label class="text-xs text-slate-500 ml-2 mb-2 block uppercase tracking-wider">Wynik starcia z
-                        Wahadłem</label>
+                        WahadĹ‚em</label>
                     <div class="flex gap-2">
                         <button type="button" id="status-fed" onclick="setPendulumStatus('fed')"
-                            class="status-btn fed">🔴 Nakarmione</button>
+                            class="status-btn fed">đź”´ Nakarmione</button>
                         <button type="button" id="status-ext" onclick="setPendulumStatus('ext')"
-                            class="status-btn ext">🟢 Wygaszone</button>
+                            class="status-btn ext">đźź˘ Wygaszone</button>
                     </div>
                     <input type="hidden" id="j-status" value="">
                 </div>
@@ -602,25 +602,25 @@
                     <option>Aplikacja Paliwowa</option>
                     <option>Szef</option>
                     <option>Korek</option>
-                    <option>Lęk</option>
+                    <option>LÄ™k</option>
                     <option>Inny Kierowca</option>
-                    <option>Zmęczenie</option>
+                    <option>ZmÄ™czenie</option>
                     <option>Inne</option>
                 </select>
 
                 <div>
-                    <label class="text-xs text-slate-500 ml-2 mb-2 block">Co czułeś? (Tagi)</label>
+                    <label class="text-xs text-slate-500 ml-2 mb-2 block">Co czuĹ‚eĹ›? (Tagi)</label>
                     <div class="flex flex-wrap gap-2" id="tags-container">
-                        <button onclick="toggleTag(this)" class="tag-btn">😡 Złość</button>
-                        <button onclick="toggleTag(this)" class="tag-btn">😨 Lęk</button>
-                        <button onclick="toggleTag(this)" class="tag-btn">😩 Zmęczenie</button>
-                        <button onclick="toggleTag(this)" class="tag-btn">😐 Obojętność</button>
-                        <button onclick="toggleTag(this)" class="tag-btn">😂 Śmiech</button>
-                        <button onclick="toggleTag(this)" class="tag-btn">😌 Spokój</button>
+                        <button onclick="toggleTag(this)" class="tag-btn">đźˇ ZĹ‚oĹ›Ä‡</button>
+                        <button onclick="toggleTag(this)" class="tag-btn">đź¨ LÄ™k</button>
+                        <button onclick="toggleTag(this)" class="tag-btn">đź© ZmÄ™czenie</button>
+                        <button onclick="toggleTag(this)" class="tag-btn">đź ObojÄ™tnoĹ›Ä‡</button>
+                        <button onclick="toggleTag(this)" class="tag-btn">đź‚ Ĺšmiech</button>
+                        <button onclick="toggleTag(this)" class="tag-btn">đźŚ SpokĂłj</button>
                     </div>
                 </div>
 
-                <textarea id="j-concl" placeholder="Wniosek (Lekcja na przyszłość)..."
+                <textarea id="j-concl" placeholder="Wniosek (Lekcja na przyszĹ‚oĹ›Ä‡)..."
                     class="w-full rounded-2xl p-4 h-20 text-sm"></textarea>
 
                 <button type="button" onclick="addJournal()"
@@ -636,8 +636,8 @@
 
         // --- STATE ---
         const INITIAL_PEARLS = [
-            { id: "1", kategoria: "🚨 SOS", tytul: "Presja Czasu", trescPorady: "Zejdź z linii ciosu. To tylko cyfry.", afirmacjaSkrot: "Mój świat dba o mój spokój." },
-            { id: "2", kategoria: "🎥 SLAJD", tytul: "Bezpieczna Trasa", trescPorady: "Widzisz zielone światła i pustą drogę.", afirmacjaSkrot: "Płynę w Prądzie Wariantów." }
+            { id: "1", kategoria: "đźš¨ SOS", tytul: "Presja Czasu", trescPorady: "ZejdĹş z linii ciosu. To tylko cyfry.", afirmacjaSkrot: "MĂłj Ĺ›wiat dba o mĂłj spokĂłj." },
+            { id: "2", kategoria: "đźŽĄ SLAJD", tytul: "Bezpieczna Trasa", trescPorady: "Widzisz zielone Ĺ›wiatĹ‚a i pustÄ… drogÄ™.", afirmacjaSkrot: "PĹ‚ynÄ™ w PrÄ…dzie WariantĂłw." }
         ];
 
         let state = { pearls: [], journal: [], amalgam: "", apiKey: "", filter: 'ALL' };
@@ -661,7 +661,7 @@
                 localStorage.setItem('nr_api_key', state.apiKey);
             } catch (e) {
                 if (e.name === 'QuotaExceededError') {
-                    if (confirm("Błąd pamięci! Wyczyścić dane?")) { localStorage.clear(); location.reload(); }
+                    if (confirm("BĹ‚Ä…d pamiÄ™ci! WyczyĹ›ciÄ‡ dane?")) { localStorage.clear(); location.reload(); }
                 }
             }
         }
@@ -725,8 +725,8 @@
             }
             const container = document.getElementById('sos-container');
             container.innerHTML = '';
-            const items = state.pearls.filter(p => p.kategoria === "🚨 SOS");
-            if (items.length === 0) container.innerHTML = '<p class="text-xs text-slate-500 text-center py-4">Brak wpisów SOS.</p>';
+            const items = state.pearls.filter(p => p.kategoria === "đźš¨ SOS");
+            if (items.length === 0) container.innerHTML = '<p class="text-xs text-slate-500 text-center py-4">Brak wpisĂłw SOS.</p>';
             items.forEach(p => {
                 container.innerHTML += `
                     <div onclick="viewPearl('${p.id}')" class="glass rounded-2xl p-4 border-l-4 border-red-500 flex justify-between items-center mb-3 active:scale-95 transition-transform cursor-pointer relative overflow-hidden">
@@ -738,7 +738,7 @@
 
         function renderWiedza() {
             const filterBar = document.getElementById('filter-bar');
-            const filters = [{ id: 'ALL', label: 'Wszystkie' }, { id: '🚨 SOS', label: 'SOS' }, { id: '🎥 SLAJD', label: 'Slajd' }, { id: '🧠 ZASADA', label: 'Zasada' }];
+            const filters = [{ id: 'ALL', label: 'Wszystkie' }, { id: 'đźš¨ SOS', label: 'SOS' }, { id: 'đźŽĄ SLAJD', label: 'Slajd' }, { id: 'đź§  ZASADA', label: 'Zasada' }];
             filterBar.innerHTML = filters.map(f => `<button onclick="setFilter('${f.id}')" class="filter-btn ${state.filter === f.id ? 'active' : 'inactive'}">${f.label}</button>`).join('');
 
             const container = document.getElementById('wiedza-container');
@@ -748,8 +748,8 @@
             if (filteredPearls.length === 0) container.innerHTML = '<p class="text-center text-slate-500 mt-10">Pusto.</p>';
             filteredPearls.forEach(p => {
                 let color = 'text-blue-400', border = 'border-blue-500/20', bg = 'bg-blue-500/5';
-                if (p.kategoria === "🚨 SOS") { color = 'text-red-400'; border = 'border-red-500/20'; bg = 'bg-red-500/5'; }
-                if (p.kategoria === "🎥 SLAJD") { color = 'text-purple-400'; border = 'border-purple-500/20'; bg = 'bg-purple-500/5'; }
+                if (p.kategoria === "đźš¨ SOS") { color = 'text-red-400'; border = 'border-red-500/20'; bg = 'bg-red-500/5'; }
+                if (p.kategoria === "đźŽĄ SLAJD") { color = 'text-purple-400'; border = 'border-purple-500/20'; bg = 'bg-purple-500/5'; }
                 container.innerHTML += `
                     <div class="glass rounded-2xl p-5 border ${border} ${bg} flex justify-between items-start gap-4 mb-4">
                         <div class="flex-1">
@@ -768,13 +768,13 @@
             const searchVal = document.getElementById('journal-search').value.toLowerCase();
             container.innerHTML = '';
             const filtered = state.journal.filter(j => j.haczyk.toLowerCase().includes(searchVal));
-            if (filtered.length === 0) { container.innerHTML = '<p class="text-center text-slate-600 mt-10">Brak wpisów.</p>'; return; }
+            if (filtered.length === 0) { container.innerHTML = '<p class="text-center text-slate-600 mt-10">Brak wpisĂłw.</p>'; return; }
 
             filtered.forEach(j => {
                 let borderColor = 'border-slate-500/50';
                 let statusIcon = '';
-                if (j.status === 'fed') { borderColor = 'border-red-500'; statusIcon = '🔴'; }
-                if (j.status === 'ext') { borderColor = 'border-emerald-500'; statusIcon = '🟢'; }
+                if (j.status === 'fed') { borderColor = 'border-red-500'; statusIcon = 'đź”´'; }
+                if (j.status === 'ext') { borderColor = 'border-emerald-500'; statusIcon = 'đźź˘'; }
 
                 const tagsHtml = j.tags ? j.tags.map(t => `<span class="text-[9px] px-2 py-1 rounded-full bg-white/10 text-slate-300">${t}</span>`).join('') : '';
 
@@ -837,16 +837,16 @@
         function addPearl() {
             try {
                 const title = document.getElementById('p-title').value;
-                if (!title) { alert('Wpisz tytuł!'); return; }
+                if (!title) { alert('Wpisz tytuĹ‚!'); return; }
                 const newP = { id: Date.now().toString(), kategoria: document.getElementById('p-cat').value, tytul: title, trescPorady: document.getElementById('p-desc').value, afirmacjaSkrot: document.getElementById('p-affirm').value };
                 state.pearls.unshift(newP); save();
                 document.getElementById('p-title').value = ""; document.getElementById('p-desc').value = ""; document.getElementById('p-affirm').value = "";
-                closeModal('pearl'); refreshAllViews(); showToast('Dodano perełkę!');
+                closeModal('pearl'); refreshAllViews(); showToast('Dodano pereĹ‚kÄ™!');
             } catch (e) { logError(e.message); }
         }
         function deletePearl(e, id) {
             e.stopPropagation();
-            if (confirm('Na pewno usunąć?')) { state.pearls = state.pearls.filter(p => p.id !== id); save(); refreshAllViews(); showToast('Usunięto perełkę.'); }
+            if (confirm('Na pewno usunÄ…Ä‡?')) { state.pearls = state.pearls.filter(p => p.id !== id); save(); refreshAllViews(); showToast('UsuniÄ™to pereĹ‚kÄ™.'); }
         }
 
         function addJournal() {
@@ -874,7 +874,7 @@
                 closeModal('journal'); refreshAllViews(); showToast('Dodano wpis!');
             } catch (e) { logError(e.message); }
         }
-        function deleteJournal(id) { if (confirm('Usunąć ten wpis?')) { state.journal = state.journal.filter(j => j.id !== id); save(); refreshAllViews(); showToast('Usunięto wpis.'); } }
+        function deleteJournal(id) { if (confirm('UsunÄ…Ä‡ ten wpis?')) { state.journal = state.journal.filter(j => j.id !== id); save(); refreshAllViews(); showToast('UsuniÄ™to wpis.'); } }
 
         function openModal(modalName, defCat = null) {
             const modal = document.getElementById(`modal-${modalName}`);
@@ -906,15 +906,15 @@
                         state = loadedState;
                         save();
                         refreshAllViews();
-                        showToast('Wgrano kopię zapasową!');
-                    } else { alert("Nieprawidłowy plik!"); }
-                } catch (err) { alert("Błąd pliku: " + err.message); }
+                        showToast('Wgrano kopiÄ™ zapasowÄ…!');
+                    } else { alert("NieprawidĹ‚owy plik!"); }
+                } catch (err) { alert("BĹ‚Ä…d pliku: " + err.message); }
             };
             reader.readAsText(file);
         }
 
         function saveApiKey() { state.apiKey = document.getElementById('api-key-input').value; save(); showToast('Zapisano klucz API'); }
-        function hardReset() { if (confirm("Usunąć wszystko?")) { localStorage.clear(); location.reload(); } }
+        function hardReset() { if (confirm("UsunÄ…Ä‡ wszystko?")) { localStorage.clear(); location.reload(); } }
 
         function speakAmalgam() {
             if (!state.amalgam) return;
@@ -928,7 +928,7 @@
             utterance.pitch = 1.0;
             window.speechSynthesis.speak(utterance);
         }
-        window.speechSynthesis.onvoiceschanged = () => { console.log("Głosy załadowane."); };
+        window.speechSynthesis.onvoiceschanged = () => { console.log("GĹ‚osy zaĹ‚adowane."); };
 
         function getSmoothPath(points, height, padding) {
             if (points.length === 0) return "";
@@ -987,7 +987,7 @@
 
             try {
                 const requestBody = {
-                    contents: [{ parts: [{ text: `Jesteś Vadimem Zelandem. Krótka (1 zdanie), mocna afirmacja dla kierowcy ciężarówki na problem: "${problem}".` }] }],
+                    contents: [{ parts: [{ text: `JesteĹ› Vadimem Zelandem. KrĂłtka (1 zdanie), mocna afirmacja dla kierowcy ciÄ™ĹĽarĂłwki na problem: "${problem}".` }] }],
                     safetySettings: [
                         { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
                         { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
@@ -996,7 +996,7 @@
                     ]
                 };
 
-                // UŻYWAMY MODELU 2.5 FLASH
+                // UĹ»YWAMY MODELU 2.5 FLASH
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${state.apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1005,12 +1005,12 @@
 
                 if (!response.ok) {
                     const err = await response.json();
-                    if (response.status === 429) throw new Error("Limit zapytań wyczerpany. Spróbuj później.");
-                    throw new Error("Błąd API: " + (err.error?.message || response.statusText));
+                    if (response.status === 429) throw new Error("Limit zapytaĹ„ wyczerpany. SprĂłbuj pĂłĹşniej.");
+                    throw new Error("BĹ‚Ä…d API: " + (err.error?.message || response.statusText));
                 }
 
                 const data = await response.json();
-                if (!data.candidates || data.candidates.length === 0) throw new Error("AI nie zwróciło odpowiedzi.");
+                if (!data.candidates || data.candidates.length === 0) throw new Error("AI nie zwrĂłciĹ‚o odpowiedzi.");
 
                 state.amalgam = data.candidates[0].content.parts[0].text;
                 save();
